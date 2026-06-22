@@ -57,7 +57,7 @@ if __name__=="__main__":
 
     parser.add_argument(
         "top-k",
-        type=float,
+        type=int,
         help="Top-K value to use"
     )
 
