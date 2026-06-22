@@ -38,31 +38,34 @@ if __name__=="__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "model",
+        "--model",
         type=str,
         help="VLM model to use for OCR"
     )
 
     parser.add_argument(
-        "temperature",
+        "--temperature",
+        default=0.1,
         type=float,
         help="Temperature to be set for decoding"
     )
 
     parser.add_argument(
-        "top-p",
+        "--top-p",
+        default=0.9,
         type=float,
         help="Top-P value to use"
     )
 
     parser.add_argument(
-        "top-k",
+        "--top-k",
+        default=40,
         type=int,
         help="Top-K value to use"
     )
 
     parser.add_argument(
-        "path",
+        "--path",
         type=str,
         help="Path to PDF"
     )
