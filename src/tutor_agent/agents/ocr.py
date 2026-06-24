@@ -26,7 +26,7 @@ def sanitize_llm_answer(answer: str) -> str:
     else:
         return answer
 
-def main(args):
+def ocr(args):
     model = ChatOllama(
         model=args.model
     )
@@ -36,17 +36,19 @@ def main(args):
 
     for img in b64_images:
         result = model.invoke([prompt_template(img)])
-        print(sanitize_llm_answer(result.content))
+        return sanitize_llm_answer(result.content)
 
+def main(args):
+    print(ocr(args))
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
-        "--model",
-        type=str,
-        help="VLM model to use for OCR"
-    )
+    # parser.add_argument(
+    #     "--model",
+    #     type=str,
+    #     help="VLM model to use for OCR"
+    # )
 
     parser.add_argument(
         "--temperature",
