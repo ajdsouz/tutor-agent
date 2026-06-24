@@ -26,12 +26,15 @@ def sanitize_llm_answer(answer: str) -> str:
     else:
         return answer
 
-def ocr(args):
+def ocr(model, temperature, top_k, top_p, doc_path):
     model = ChatOllama(
-        model=args.model
+        model=model,
+        temperature=temperature,
+        top_k=top_k,
+        top_p = top_p
     )
 
-    pdf_pages = convert_from_path(args.path)
+    pdf_pages = convert_from_path(doc_path)
     b64_images = [encode_image(image) for image in pdf_pages]
 
     for img in b64_images:
@@ -39,16 +42,17 @@ def ocr(args):
         return sanitize_llm_answer(result.content)
 
 def main(args):
-    print(ocr(args))
+    print(ocr(**args))
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser()
 
-    # parser.add_argument(
-    #     "--model",
-    #     type=str,
-    #     help="VLM model to use for OCR"
-    # )
+    # Sunsetting argument as we now set and load a config
+    parser.add_argument(
+        "--model",
+        type=str,
+        help="VLM model to use for OCR"
+    )
 
     parser.add_argument(
         "--temperature",
@@ -72,7 +76,7 @@ if __name__=="__main__":
     )
 
     parser.add_argument(
-        "--path",
+        "--doc-path",
         type=str,
         help="Path to PDF"
     )
