@@ -1,3 +1,4 @@
+import re
 import argparse
 import base64
 from io import BytesIO
@@ -13,13 +14,17 @@ def encode_image(pil_image):
 def prompt_template(image_base64):
     prompt_template = HumanMessage(
         content=[
-            {"type": "text", "text": "Perform Optical Character Recognition (OCR) on the following image and extract the text. The text should be formatted in Markdown"},
+            {"type": "text", "text": "Perform Optical Character Recognition (OCR) on the following image and extract the text. The text should be formatted in Markdown, inside a code block with three back ticks"},
             {"type": "image_url", "image_url": f"data:image/png;base64,{image_base64}"}
         ]
     )
     return prompt_template
 
-
+def sanitize_llm_answer(answer: str) -> str:
+    if "```" in answer:
+        return re.search(r"```(?:\w+\n)?(.*?)```", answer, re.DOTALL).group(1)
+    else:
+        return answer
 
 def main(args):
     model = ChatOllama(
@@ -31,7 +36,7 @@ def main(args):
 
     for img in b64_images:
         result = model.invoke([prompt_template(img)])
-        print(result)
+        print(sanitize_llm_answer(result.content))
 
 
 if __name__=="__main__":
